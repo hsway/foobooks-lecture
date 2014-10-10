@@ -1,52 +1,75 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the Closure to execute when that URI is requested.
-|
-*/
-
-Route::get('/', function()
-{
-	return 'Hello World!';
-	//return View::make('hello');
-});
 
 
-Route::get('/books', function() {
-
-	return "Here are all the books...";
+# Homepage
+Route::get('/', function() {
+	
+    return View::make('index');
 
 });
 
-Route::get('/books/{category}', function($category) {
+// List all books / search
+Route::get('/list/{query?}', function($query) {
 
-	return "Here are the books in the category: ".$category;
+    return View::make('list');
+
+});
+
+// Display the form for a new book
+Route::get('/add', function() {
+
+
+});
+
+// Process form for a new book
+Route::post('/add', function() {
+
+
+});
+
+// Display the form to edit a book
+Route::get('/edit/{title}', function() {
+
+
+
+});
+
+// Process form for a edit book
+Route::post('/edit/', function() {
+
 
 });
 
 
-Route::get('/new', function() {
 
-    $view  = '<form method="POST" action="/new">';
-    $view .= 'Title: <input type="text" name="title">';
-    $view .= '<input type="submit">';
-    $view .= '</form>';
-    return $view;
+Route::get('/data', function() {
 
-});
+    // Get the file
+    $books = File::get(app_path().'/database/books.json');
 
-Route::post('/new', function() {
+    // Convert to an array
+    $books = json_decode($books,true);
 
-    $input =  Input::all();
-    print_r($input);
+    // Return the file
+    echo Pre::render($books);
+
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
