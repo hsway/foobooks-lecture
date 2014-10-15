@@ -16,6 +16,8 @@
 
 	<a href='/'><img class='logo' src='images/laravel-foobooks-logo@2x.png' alt='Foobooks logo'></a>
 
+	<a href='https://github.com/susanBuck/foobooks'>View on Github</a>
+
 	<nav>
 		<ul>
 			<li><a href='/list'>List All</a></li>
