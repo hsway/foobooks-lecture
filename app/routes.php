@@ -1,24 +1,31 @@
 <?php
 
 
-
-# Homepage
+// Homepage
 Route::get('/', function() {
 	
     return View::make('index');
 
 });
 
+
+
+
 // List all books / search
-Route::get('/list/{query?}', function($query) {
+Route::get('/list/{format?}', function($format = 'html') {
 
     return View::make('list');
 
 });
 
+
+
+
+
 // Display the form for a new book
 Route::get('/add', function() {
 
+    return View::make('add');
 
 });
 
@@ -28,9 +35,11 @@ Route::post('/add', function() {
 
 });
 
+
+
+
 // Display the form to edit a book
 Route::get('/edit/{title}', function() {
-
 
 
 });
@@ -43,6 +52,8 @@ Route::post('/edit/', function() {
 
 
 
+
+// Test route to load and output books
 Route::get('/data', function() {
 
     // Get the file

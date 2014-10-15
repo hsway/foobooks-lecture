@@ -5,7 +5,8 @@
 	<title>@yield('title','Foobooks')</title>
 	<meta charset='utf-8'>
 
-	<link rel='stylesheet' href='foobooks.css' type='text/css'>
+	<link href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/flatly/bootstrap.min.css" rel="stylesheet">
+	<link rel='stylesheet' href='css/foobooks.css' type='text/css'>
 
 	@yield('head')
 
@@ -13,7 +14,14 @@
 </head>
 <body>
 
-	<img src='images/laravel-foobooks-logo@2x.png' alt='Foobooks logo'>
+	<a href='/'><img class='logo' src='images/laravel-foobooks-logo@2x.png' alt='Foobooks logo'></a>
+
+	<nav>
+		<ul>
+			<li><a href='/list'>List All</a></li>
+			<li><a href='/add'>+ Add Book</a></li>
+		</ul>
+	</nav>
 	
 	@yield('content')
 

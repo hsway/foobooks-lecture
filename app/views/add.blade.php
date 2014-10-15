@@ -1,9 +1,9 @@
 @extends('_master')
 
 @section('title')
-	Books
+	Add a new book
 @stop
 
 @section('content')
-	<h1>Books</h1>
+	<h1>Add a new book</h1>
 @stop
