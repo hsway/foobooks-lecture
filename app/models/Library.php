@@ -7,7 +7,7 @@ class Library {
 	private $path; // String
 
 	// Methods (Functions)
-	public function setPath($path) 
+	public function setPath($path) {
 		$this->path = $path;
 	}
 
