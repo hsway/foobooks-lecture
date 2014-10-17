@@ -9,7 +9,15 @@
 @stop
 
 @section('content')
+
+	{{ Form::open(array('url' => '/list', 'method' => 'GET')) }}
+
+		{{ Form::label('query','Search') }}
 	
-	Search: <input type='text'>
+		{{ Form::text('query'); }}
+
+		{{ Form::submit('Search'); }}
+
+	{{ Form::close() }}
 
 @stop

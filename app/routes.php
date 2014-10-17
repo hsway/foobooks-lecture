@@ -14,11 +14,15 @@ Route::get('/', function() {
 // List all books / search
 Route::get('/list/{format?}', function($format = 'html') {
 
-    $library = new Library();
+    $query = Input::get('query');
 
+    $library = new Library();
     $library->setPath(app_path().'/database/books.json');
-    
     $books = $library->getBooks();
+
+    if($query) {
+        $books = $library->search($query);
+    }
 
     if($format == 'json') {
         return 'JSON Version';
@@ -29,7 +33,8 @@ Route::get('/list/{format?}', function($format = 'html') {
     else {
         return View::make('list')
             ->with('name','Susan')
-            ->with('books', $books);
+            ->with('books', $books)
+            ->with('query', $query);
 
     }
 
