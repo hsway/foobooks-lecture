@@ -8,9 +8,11 @@ Route::get('mysql-test', function() {
 
     # Use the DB component to select all the databases
     $results = DB::select('SHOW DATABASES;');
+    $books = DB::select('select * from books;');
 
     # If the "Pre" package is not installed, you should output using print_r instead
     echo Pre::render($results);
+    echo Pre::render($books);
 
 });
 
