@@ -1,6 +1,42 @@
 <?php
 
 
+Route::get('/test', function() {
+
+    /*
+    # Returns and object of books
+    $books = DB::table('books')->get();
+
+    foreach ($books as $book) {
+        echo $book->author."<br>";
+    }
+    */
+
+    /*
+    $books = DB::table('books')->where('author', 'LIKE', '%Scott%')->get();
+
+    foreach($books as $book) {
+        echo $book->title;
+    }*/
+
+    $author = Input::get('author');
+
+    # Write your own SQL select statement
+    $sql = 'SELECT * FROM books WHERE author LIKE "%$author%"';
+
+    # Escape your statement if you have any input coming from users to avoid SQL injection attacks
+    # In this example we don't, but it doesn't hurt to do it anyway
+    $sql = DB::raw($sql);
+
+    # Run your SQL query
+    $books = DB::select($sql);
+
+    # Output the results
+    echo Paste\Pre::render($books,'');
+
+});
+
+
 # /app/routes.php
 Route::get('/debug', function() {
 
