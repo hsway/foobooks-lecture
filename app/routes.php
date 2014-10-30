@@ -115,6 +115,8 @@ Route::get('/trigger-error',function() {
 });
 
 
+
+
 /* 
 The best way to fill your tables with sample/test data is using Laravel's Seeding feature.
 Before we get to that, though, here's a quick-and-dirty practice route that will
@@ -142,6 +144,33 @@ Route::get('/seed', function() {
 
 
 
+
+/*
+Quick way to clear out the books table when we've been messing it up with lots of test data
+*/
+Route::get('/truncate', function() {
+
+   Book::truncate();
+
+   echo 'The book table was emptied.';
+
+});
+
+
+
+
+/*
+Print all available routes
+*/
+Route::get('/routes', function() {
+    
+    $routeCollection = Route::getRoutes();
+
+    foreach($routeCollection as $value) {
+        echo "<a href='/".$value->getPath()."' target='_blank'>".$value->getPath()."</a><br>";
+    }
+
+});
 
 
 
