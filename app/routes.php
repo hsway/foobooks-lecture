@@ -1,38 +1,86 @@
 <?php
 
 
-Route::get('/test', function() {
+Route::get('/practice-creating', function() {
 
-    /*
-    # Returns and object of books
-    $books = DB::table('books')->get();
+    # Instantiate a new Book model class
+    $book = new Book();
 
-    foreach ($books as $book) {
-        echo $book->author."<br>";
+    # Set 
+    $book->title = 'The Great Gatsby';
+    $book->author = 'F. Scott Fiztgerald';
+    $book->published = 1925;
+    $book->cover = 'http://img2.imagesbn.com/p/9780743273565_p0_v4_s114x166.JPG';
+    $book->purchase_link = 'http://www.barnesandnoble.com/w/the-great-gatsby-francis-scott-fitzgerald/1116668135?ean=9780743273565';
+
+    # This is where the Eloquent ORM magic happens
+    $book->save();
+
+    return 'A new book has been added! Check your database to see...';
+
+});
+
+
+Route::get('/practice-reading', function() {
+
+    # The all() method will fetch all the rows from a Model/table
+    $books = Book::all();
+
+    # Make sure we have results before trying to print them...
+    if($books->isEmpty() != TRUE) {
+
+        # Typically we'd pass $books to a View, but for quick and dirty demonstration, let's just output here...
+        foreach($books as $book) {
+            echo $book->title.'<br>';
+        }
     }
-    */
+    else {
+        return 'No books found';
+    }
 
-    /*
-    $books = DB::table('books')->where('author', 'LIKE', '%Scott%')->get();
+});
 
-    foreach($books as $book) {
-        echo $book->title;
-    }*/
 
-    $author = Input::get('author');
+Route::get('/practice-updating', function() {
 
-    # Write your own SQL select statement
-    $sql = 'SELECT * FROM books WHERE author LIKE "%$author%"';
+    # First get a book to update
+    $book = Book::where('author', 'LIKE', '%Scott%')->first();
 
-    # Escape your statement if you have any input coming from users to avoid SQL injection attacks
-    # In this example we don't, but it doesn't hurt to do it anyway
-    $sql = DB::raw($sql);
+    # If we found the book, update it
+    if($book) {
 
-    # Run your SQL query
-    $books = DB::select($sql);
+        # Give it a different title
+        $book->title = 'The Really Great Gatsby';
 
-    # Output the results
-    echo Paste\Pre::render($books,'');
+        # Save the changes
+        $book->save();
+
+        return "Update complete; check the database to see if your update worked...";
+    }
+    else {
+        return "Book not found, can't update.";
+    }
+
+});
+
+
+Route::get('/practice-deleting', function() {
+
+    # First get a book to delete
+    $book = Book::where('author', 'LIKE', '%Scott%')->first();
+
+    # If we found the book, delete it
+    if($book) {
+
+        # Goodbye!
+        $book->delete();
+
+        return "Deletion complete; check the database to see if it worked...";
+
+    }
+    else {
+        return "Can't delete - Book not found.";
+    }
 
 });
 
