@@ -1,6 +1,7 @@
 <?php
 
 
+
 Route::get('/practice-creating', function() {
 
     # Instantiate a new Book model class
@@ -305,8 +306,23 @@ Route::get('/routes', function() {
 
 
 
+// Show the form
+Route::get('/ajax-example', function() {
 
+   return View::make('ajax-example');
 
+});
+
+// Process the form - this is triggered by Ajax
+Route::post('/ajax-example', array('before'=>'csrf', function() {
+
+    $data = var_dump($_POST);
+
+    $data .= '<br>Your name reversed is '.strrev($_POST['name']);
+
+    return $data;
+
+}));
 
 
 

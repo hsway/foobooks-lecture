@@ -27,7 +27,7 @@
 	
 	@yield('content')
 
-	@yield('body')
+	@yield('/body')
 	
 </body>
 </html>
