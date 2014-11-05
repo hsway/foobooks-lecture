@@ -191,6 +191,7 @@ return array(
 		'View'            => 'Illuminate\Support\Facades\View',
 		'Pre'			  => 'Paste\Pre',
 		'RndStr'	      => 'Xi\RandomString\RandomStringGenerator',
+		'Debugbar'	      => 'Barryvdh\Debugbar\Facade',
 
 	),
 
