@@ -14,21 +14,24 @@ class CreateBooksTable extends Migration {
 	{
 		Schema::create('books', function($table) {
 
-			// Set up your primary key and make it auto increement
+			# AI, PK
 			$table->increments('id');
-
-			// Creates fields: created_at, updated_at
+			
+			# created_at, updated_at columns
 			$table->timestamps();
-
-			$table->string('author');
+			
+			# General data...
 			$table->string('title');
+			$table->integer('author_id')->unsigned(); # Important! FK has to be unsigned because the PK it will reference is auto-incrementing
 			$table->integer('published');
 			$table->string('cover');
 			$table->string('purchase_link');
+			
+			# Define foreign keys...
+			$table->foreign('author_id')->references('id')->on('authors');
 
 		});
 
-		
 	}
 
 	/**
