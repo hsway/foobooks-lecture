@@ -1,5 +1,101 @@
 <?php
 
+/*
+Table of contents:
+
+1. Routes specific to the functionality of foobooks
+2. Practice and examples
+3. Debugging and testing
+4. Helpers
+*/
+
+
+/*-------------------------------------------------------------------------------------------------
+Routes specific to the functionality of foobooks
+-------------------------------------------------------------------------------------------------*/
+// Homepage
+Route::get('/', function() {
+    
+    return View::make('index');
+
+});
+
+
+// List all books / search
+Route::get('/list/{format?}', function($format = 'html') {
+
+    $query = Input::get('query');
+
+    $library = new Library();
+    $library->setPath(app_path().'/database/books.json');
+    $books = $library->getBooks();
+
+    if($query) {
+        $books = $library->search($query);
+    }
+
+    if($format == 'json') {
+        return 'JSON Version';
+    }
+    elseif($format == 'pdf') {
+        return 'PDF Version;';
+    }
+    else {
+        return View::make('list')
+            ->with('name','Susan')
+            ->with('books', $books)
+            ->with('query', $query);
+
+    }
+
+});
+
+
+// Display the form for a new book
+Route::get('/add', function() {
+
+    return View::make('add');
+
+});
+
+// Process form for a new book
+Route::post('/add', function() {
+
+
+});
+
+
+// Display the form to edit a book
+Route::get('/edit/{title}', function() {
+
+
+});
+
+// Process form for a edit book
+Route::post('/edit/', function() {
+
+
+});
+
+
+
+
+/*-------------------------------------------------------------------------------------------------
+2. Practice and examples
+-------------------------------------------------------------------------------------------------*/
+// Test route to load and output books
+Route::get('/data', function() {
+
+    $library = new Library();
+
+    $library->setPath(app_path().'/database/books.json');
+    
+    $books = $library->getBooks();
+
+    // Return the file
+    echo Pre::render($books);
+
+});
 
 
 Route::get('/practice-creating', function() {
@@ -86,6 +182,31 @@ Route::get('/practice-deleting', function() {
 });
 
 
+
+# Show the form
+Route::get('/ajax-example', function() {
+
+   return View::make('ajax-example');
+
+});
+
+# Process the form - this is triggered by Ajax
+Route::post('/ajax-example', array('before'=>'csrf', function() {
+
+    $data = var_dump($_POST);
+
+    $data .= '<br>Your name reversed is '.strrev($_POST['name']);
+
+    return $data;
+
+}));
+
+
+
+
+/*-------------------------------------------------------------------------------------------------
+3. Debugging and testing
+-------------------------------------------------------------------------------------------------*/
 # /app/routes.php
 Route::get('/debug', function() {
 
@@ -133,92 +254,6 @@ Route::get('/debug', function() {
 });
 
 
-// Homepage
-Route::get('/', function() {
-    
-    return View::make('index');
-
-});
-
-
-// List all books / search
-Route::get('/list/{format?}', function($format = 'html') {
-
-    $query = Input::get('query');
-
-    $library = new Library();
-    $library->setPath(app_path().'/database/books.json');
-    $books = $library->getBooks();
-
-    if($query) {
-        $books = $library->search($query);
-    }
-
-    if($format == 'json') {
-        return 'JSON Version';
-    }
-    elseif($format == 'pdf') {
-        return 'PDF Version;';
-    }
-    else {
-        return View::make('list')
-            ->with('name','Susan')
-            ->with('books', $books)
-            ->with('query', $query);
-
-    }
-
-});
-
-
-// Display the form for a new book
-Route::get('/add', function() {
-
-    return View::make('add');
-
-});
-
-// Process form for a new book
-Route::post('/add', function() {
-
-
-});
-
-
-// Display the form to edit a book
-Route::get('/edit/{title}', function() {
-
-
-});
-
-// Process form for a edit book
-Route::post('/edit/', function() {
-
-
-});
-
-
-// Test route to load and output books
-Route::get('/data', function() {
-
-    $library = new Library();
-
-    $library->setPath(app_path().'/database/books.json');
-    
-    $books = $library->getBooks();
-
-    // Return the file
-    echo Pre::render($books);
-
-});
-
-
-
-
-/*-------------------------------------------------------------------------------------------------
-All debugging and testing routes go below here...
--------------------------------------------------------------------------------------------------*/
-
 /* 
 Test to make sure we can connect to MySQL
 */
@@ -249,6 +284,9 @@ Route::get('/trigger-error',function() {
 
 
 
+/*-------------------------------------------------------------------------------------------------
+4. Helpers
+-------------------------------------------------------------------------------------------------*/
 /* 
 The best way to fill your tables with sample/test data is using Laravel's Seeding feature.
 Before we get to that, though, here's a quick-and-dirty practice route that will
@@ -275,8 +313,6 @@ Route::get('/seed', function() {
 });
 
 
-
-
 /*
 Quick way to clear out the books table when we've been messing it up with lots of test data
 */
@@ -287,8 +323,6 @@ Route::get('/truncate', function() {
    echo 'The book table was emptied.';
 
 });
-
-
 
 
 /*
@@ -306,23 +340,6 @@ Route::get('/routes', function() {
 
 
 
-// Show the form
-Route::get('/ajax-example', function() {
-
-   return View::make('ajax-example');
-
-});
-
-// Process the form - this is triggered by Ajax
-Route::post('/ajax-example', array('before'=>'csrf', function() {
-
-    $data = var_dump($_POST);
-
-    $data .= '<br>Your name reversed is '.strrev($_POST['name']);
-
-    return $data;
-
-}));
 
 
 
