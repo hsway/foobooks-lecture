@@ -314,13 +314,29 @@ Route::get('/seed', function() {
 
 
 /*
-Quick way to clear out the books table when we've been messing it up with lots of test data
+Quick way to clear out the tables when we've been messing it up with lots of test data
 */
 Route::get('/truncate', function() {
 
-   Book::truncate();
+    //Book::truncate();
 
-   echo 'The book table was emptied.';
+    # Clear the tables to a blank slate
+    DB::statement('SET FOREIGN_KEY_CHECKS=0'); # Disable FK constraints so that all rows can be deleted, even if there's an associated FK
+
+    $results = '';
+    $tables  = Array('books', 'authors', 'tags', 'book_tag');
+
+    foreach($tables as $table) {
+        if(Schema::hasTable($table)) {
+            DB::statement('TRUNCATE '.$table);
+            $results .= 'Truncated '.$table.'<br>'; 
+        }
+        else {
+           $results .= $table.' did not exist.<br>';  
+        }
+    }
+
+    return $results;
 
 });
 
