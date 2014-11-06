@@ -313,6 +313,55 @@ Route::get('/seed', function() {
 });
 
 
+Route::get('/seed-a', function() {
+
+    # Authors
+    $fitzgerald = new Author;
+    $fitzgerald->name = 'F. Scott Fitzgerald';
+    $fitzgerald->birth_date = '1896-09-24';
+    $fitzgerald->save();
+    
+    $plath = new Author;
+    $plath->name = 'Sylvia Plath';
+    $plath->birth_date = '1932-10-27';
+    $plath->save();
+    
+    $angelou = new Author;
+    $angelou->name = 'Maya Angelou';
+    $angelou->birth_date = '1928-04-04';
+    $angelou->save();
+
+    # Books     
+    $gatsby = new Book;
+    $gatsby->title = 'The Great Gatsby';
+    $gatsby->published = 1925;
+    $gatsby->cover = 'http://img2.imagesbn.com/p/9780743273565_p0_v4_s114x166.JPG';
+    $gatsby->purchase_link = 'http://www.barnesandnoble.com/w/the-great-gatsby-francis-scott-fitzgerald/1116668135?ean=9780743273565';
+    
+    # Associate has to be called *before* the book is created (save()) 
+    $gatsby->author()->associate($fitzgerald); # Equivalent of $gatsby->author_id = $fitzgerald->id
+    $gatsby->save();
+    
+    $belljar = new Book;
+    $belljar->title = 'The Bell Jar';
+    $belljar->published = 1963;
+    $belljar->cover = 'http://img1.imagesbn.com/p/9780061148514_p0_v2_s114x166.JPG';
+    $belljar->purchase_link = 'http://www.barnesandnoble.com/w/bell-jar-sylvia-plath/1100550703?ean=9780061148514';
+    $belljar->author()->associate($plath);
+    $belljar->save();
+        
+    $cagedbird = new Book;
+    $cagedbird->title = 'I Know Why the Caged Bird Sings';
+    $cagedbird->published = 1969;
+    $cagedbird->cover = 'http://img1.imagesbn.com/p/9780345514400_p0_v1_s114x166.JPG';
+    $cagedbird->purchase_link = 'http://www.barnesandnoble.com/w/i-know-why-the-caged-bird-sings-maya-angelou/1100392955?ean=9780345514400';
+    $cagedbird->author()->associate($angelou);
+    $cagedbird->save();
+
+    return 'Done';
+});
+
+
 /*
 Quick way to clear out the tables when we've been messing it up with lots of test data
 */
