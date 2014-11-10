@@ -1,17 +1,17 @@
 <?php
 
-class Book extends Eloquent {
+class Book extends Eloquent { 
 
+	public function author() {
+        # Book belongs to Author
+        # Define an inverse one-to-many relationship.
+        return $this->belongsTo('Author');
+    }
 
-	public function __construct() {
+    public function tags() {
+        # Books belong to many Tags     
+        return $this->belongsToMany('Tag');
+    }
 
-		
-	}
-
-
-	public function get_most_popular() {
-
-
-	}
 
 }

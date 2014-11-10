@@ -15,16 +15,12 @@
 
 	<h2>You searched for {{{ $query }}}</h2>
 
-	@foreach($books as $title => $book)
+	@foreach($books as $book)
 		<section class='book'>
-			<h2>{{ $title }}</h2>
+			<h2>{{ $book['title'] }}</h2>
 			{{ $book['author'] }} ({{$book['published']}})
 
-			<div class='tags'>
-				@foreach($book['tags'] as $tag)
-					{{ $tag }}
-				@endforeach
-			</div>
+			
 			<img src='{{ $book['cover'] }}'>
 			<br>
 			<a href='{{ $book['purchase_link'] }}'>Purchase...</a>

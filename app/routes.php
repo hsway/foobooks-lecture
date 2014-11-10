@@ -10,6 +10,125 @@ Table of contents:
 */
 
 
+
+Route::get('/signup',
+    array(
+        'before' => 'guest',
+        function() {
+            return View::make('signup');
+        }
+    )
+);
+
+Route::get('/login',
+    array(
+        'before' => 'guest',
+        function() {
+            return View::make('login');
+        }
+    )
+);
+
+Route::post('/login', 
+    array(
+        'before' => 'csrf', 
+        function() {
+
+            $credentials = Input::only('email', 'password');
+
+            if (Auth::attempt($credentials, $remember = true)) {
+                return Redirect::intended('/')->with('flash_message', 'Welcome Back!');
+            }
+            else {
+                return Redirect::to('/login')->with('flash_message', 'Log in failed; please try again.');
+            }
+
+            return Redirect::to('login');
+        }
+    )
+);
+
+# /app/routes.php
+Route::get('/logout', function() {
+
+    # Log out
+    Auth::logout();
+
+    # Send them to the homepage
+    return Redirect::to('/');
+
+});
+
+
+Route::post('/signup', 
+    array(
+        'before' => 'csrf', 
+        function() {
+
+            $user = new User;
+            $user->email    = Input::get('email');
+            $user->password = Hash::make(Input::get('password'));
+
+            # Try to add the user 
+            try {
+                $user->save();
+            }
+            # Fail
+            catch (Exception $e) {
+                return Redirect::to('/signup')->with('flash_message', 'Sign up failed; please try again.')->withInput();
+            }
+
+            # Log the user in
+            Auth::login($user);
+
+            return Redirect::to('/list')->with('flash_message', 'Welcome to Foobooks!');
+
+        }
+    )
+);
+
+Route::get('/test', function() {
+
+    
+   $books = Book::with('author')->get();
+
+   foreach($books as $book) {
+        echo $book->title."<br>";
+        echo $book->author->name."<br>";
+        foreach($book->tags as $tag) {
+            echo $tag->name."<br>";
+        }
+        echo "<br><br>";
+    }
+
+    
+
+    /*
+    $author = new Author();
+    $author->name = 'Dayle Reese';
+    $author->save();
+
+    $book = new Book();
+    $book->title = 'CodeBright';
+    //$book->author_id = $author->id; # ******
+    //$book->author()->associate($author);
+
+    $book->save();
+    */
+
+    /*
+    $tag = new Tag;
+    $tag->name = 'novel';
+    $tag->save();
+
+    $book = Book::first();
+    $book->tags()->attach($tag); # <-----
+    */
+
+
+});
+
+
 /*-------------------------------------------------------------------------------------------------
 Routes specific to the functionality of foobooks
 -------------------------------------------------------------------------------------------------*/
@@ -26,12 +145,11 @@ Route::get('/list/{format?}', function($format = 'html') {
 
     $query = Input::get('query');
 
-    $library = new Library();
-    $library->setPath(app_path().'/database/books.json');
-    $books = $library->getBooks();
-
     if($query) {
-        $books = $library->search($query);
+        $books = Book::where('author','LIKE', "%$query%")->orWhere('title','LIKE',"%$query%")->get();
+    }
+    else {
+        $books = Book::all();
     }
 
     if($format == 'json') {
@@ -42,7 +160,6 @@ Route::get('/list/{format?}', function($format = 'html') {
     }
     else {
         return View::make('list')
-            ->with('name','Susan')
             ->with('books', $books)
             ->with('query', $query);
 
@@ -59,10 +176,22 @@ Route::get('/add', function() {
 });
 
 // Process form for a new book
-Route::post('/add', function() {
+Route::post('/add', array('before'=>'csrf',
+
+    function() {
+
+    var_dump($_POST);
+
+    $book = new Book();
+    $book->title = $_POST['title'];
+    //$book->title = Input::get('title');
+
+    $book->save();
+
+    return Redirect::to('/list');
 
 
-});
+}));
 
 
 // Display the form to edit a book
@@ -294,7 +423,7 @@ throw three books into the `books` table.
 */
 Route::get('/seed-books', function() {
 
-    return 'This seed will no longer work because the books table is no longer embedded with the author.';
+return 'This seed will no longer work because the books table is no longer embedded with the author.';
 
     # Build the raw SQL query
     $sql = "INSERT INTO books (author,title,published,cover,purchase_link) VALUES 
@@ -314,6 +443,14 @@ Route::get('/seed-books', function() {
 
 });
 
+
+Route::get('/clean', function() {
+
+    $clean = new Clean();
+
+    return 'Done';
+
+});
 
 Route::get('/seed-books-and-authors', function() {
 
