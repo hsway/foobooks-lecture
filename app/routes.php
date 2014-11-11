@@ -3,6 +3,7 @@
 /*
 Table of contents:
 
+0. /test
 1. Routes specific to the functionality of foobooks
 2. Practice and examples
 3. Debugging and testing
@@ -10,7 +11,43 @@ Table of contents:
 */
 
 
+/*-------------------------------------------------------------------------------------------------
+0. Test
+Used for demos during lecture
+-------------------------------------------------------------------------------------------------*/
+Route::get('/test', function() {
 
+    # w/o eager loading: 7 Queries
+    //$books = Book::with('author')->get();
+
+    # w/ eager loading: 3 Queries
+    #$books = Book::with('author')->with('tags')->get();
+    $books = Book::with('author', 'tags')->get();
+
+    foreach($books as $book) {
+        echo $book->title."<br>";
+        echo $book->author->name."<br>";
+        foreach($book->tags as $tag) {
+            echo "<em>".$tag->name."</em><br>";
+        }
+        echo "<br><br>";
+    }
+
+});
+
+
+/*-------------------------------------------------------------------------------------------------
+1. Routes specific to the functionality of foobooks
+-------------------------------------------------------------------------------------------------*/
+// Homepage
+Route::get('/', function() {
+
+    return View::make('index');
+
+});
+
+
+# User: Sign up
 Route::get('/signup',
     array(
         'before' => 'guest',
@@ -20,56 +57,17 @@ Route::get('/signup',
     )
 );
 
-Route::get('/login',
+# User: Sign up
+Route::post('/signup',
     array(
-        'before' => 'guest',
-        function() {
-            return View::make('login');
-        }
-    )
-);
-
-Route::post('/login', 
-    array(
-        'before' => 'csrf', 
-        function() {
-
-            $credentials = Input::only('email', 'password');
-
-            if (Auth::attempt($credentials, $remember = true)) {
-                return Redirect::intended('/')->with('flash_message', 'Welcome Back!');
-            }
-            else {
-                return Redirect::to('/login')->with('flash_message', 'Log in failed; please try again.');
-            }
-
-            return Redirect::to('login');
-        }
-    )
-);
-
-# /app/routes.php
-Route::get('/logout', function() {
-
-    # Log out
-    Auth::logout();
-
-    # Send them to the homepage
-    return Redirect::to('/');
-
-});
-
-
-Route::post('/signup', 
-    array(
-        'before' => 'csrf', 
+        'before' => 'csrf',
         function() {
 
             $user = new User;
             $user->email    = Input::get('email');
             $user->password = Hash::make(Input::get('password'));
 
-            # Try to add the user 
+            # Try to add the user
             try {
                 $user->save();
             }
@@ -87,60 +85,52 @@ Route::post('/signup',
     )
 );
 
-Route::get('/test', function() {
 
-    
-   $books = Book::with('author')->get();
-
-   foreach($books as $book) {
-        echo $book->title."<br>";
-        echo $book->author->name."<br>";
-        foreach($book->tags as $tag) {
-            echo $tag->name."<br>";
+# User: Log in
+Route::get('/login',
+    array(
+        'before' => 'guest',
+        function() {
+            return View::make('login');
         }
-        echo "<br><br>";
-    }
-
-    
-
-    /*
-    $author = new Author();
-    $author->name = 'Dayle Reese';
-    $author->save();
-
-    $book = new Book();
-    $book->title = 'CodeBright';
-    //$book->author_id = $author->id; # ******
-    //$book->author()->associate($author);
-
-    $book->save();
-    */
-
-    /*
-    $tag = new Tag;
-    $tag->name = 'novel';
-    $tag->save();
-
-    $book = Book::first();
-    $book->tags()->attach($tag); # <-----
-    */
+    )
+);
 
 
-});
+# User: Log in
+Route::post('/login',
+    array(
+        'before' => 'csrf',
+        function() {
+
+            $credentials = Input::only('email', 'password');
+
+            if (Auth::attempt($credentials, $remember = true)) {
+                return Redirect::intended('/')->with('flash_message', 'Welcome Back!');
+            }
+            else {
+                return Redirect::to('/login')->with('flash_message', 'Log in failed; please try again.');
+            }
+
+            return Redirect::to('login');
+        }
+    )
+);
 
 
-/*-------------------------------------------------------------------------------------------------
-Routes specific to the functionality of foobooks
--------------------------------------------------------------------------------------------------*/
-// Homepage
-Route::get('/', function() {
-    
-    return View::make('index');
+# User: Logout
+Route::get('/logout', function() {
+
+    # Log out
+    Auth::logout();
+
+    # Send them to the homepage
+    return Redirect::to('/');
 
 });
 
 
-// List all books / search
+# List all books / search
 Route::get('/list/{format?}', function($format = 'html') {
 
     $query = Input::get('query');
@@ -218,7 +208,7 @@ Route::get('/data', function() {
     $library = new Library();
 
     $library->setPath(app_path().'/database/books.json');
-    
+
     $books = $library->getBooks();
 
     // Return the file
@@ -232,7 +222,7 @@ Route::get('/practice-creating', function() {
     # Instantiate a new Book model class
     $book = new Book();
 
-    # Set 
+    # Set
     $book->title = 'The Great Gatsby';
     $book->author = 'F. Scott Fiztgerald';
     $book->published = 1925;
@@ -373,7 +363,7 @@ Route::get('/debug', function() {
         echo '<strong style="background-color:green; padding:5px;">Connection confirmed</strong>';
         echo "<br><br>Your Databases:<br><br>";
         print_r($results);
-    } 
+    }
     catch (Exception $e) {
         echo '<strong style="background-color:crimson; padding:5px;">Caught exception: ', $e->getMessage(), "</strong>\n";
     }
@@ -383,7 +373,7 @@ Route::get('/debug', function() {
 });
 
 
-/* 
+/*
 Test to make sure we can connect to MySQL
 */
 Route::get('mysql-test', function() {
@@ -400,7 +390,7 @@ Route::get('mysql-test', function() {
 });
 
 
-/* 
+/*
 When testing environments you can use this route to trigger an error to see what your debugging settings are doing.
 */
 Route::get('/trigger-error',function() {
@@ -416,7 +406,7 @@ Route::get('/trigger-error',function() {
 /*-------------------------------------------------------------------------------------------------
 4. Helpers
 -------------------------------------------------------------------------------------------------*/
-/* 
+/*
 The best way to fill your tables with sample/test data is using Laravel's Seeding feature.
 Before we get to that, though, here's a quick-and-dirty practice route that will
 throw three books into the `books` table.
@@ -426,7 +416,7 @@ Route::get('/seed-books', function() {
 return 'This seed will no longer work because the books table is no longer embedded with the author.';
 
     # Build the raw SQL query
-    $sql = "INSERT INTO books (author,title,published,cover,purchase_link) VALUES 
+    $sql = "INSERT INTO books (author,title,published,cover,purchase_link) VALUES
             ('F. Scott Fitzgerald','The Great Gatsby',1925,'http://img2.imagesbn.com/p/9780743273565_p0_v4_s114x166.JPG','http://www.barnesandnoble.com/w/the-great-gatsby-francis-scott-fitzgerald/1116668135?ean=9780743273565'),
             ('Sylvia Plath','The Bell Jar',1963,'http://img1.imagesbn.com/p/9780061148514_p0_v2_s114x166.JPG','http://www.barnesandnoble.com/w/bell-jar-sylvia-plath/1100550703?ean=9780061148514'),
             ('Maya Angelou','I Know Why the Caged Bird Sings',1969,'http://img1.imagesbn.com/p/9780345514400_p0_v1_s114x166.JPG','http://www.barnesandnoble.com/w/i-know-why-the-caged-bird-sings-maya-angelou/1100392955?ean=9780345514400')
@@ -461,28 +451,28 @@ Route::get('/seed-books-and-authors', function() {
     $fitzgerald->name = 'F. Scott Fitzgerald';
     $fitzgerald->birth_date = '1896-09-24';
     $fitzgerald->save();
-    
+
     $plath = new Author;
     $plath->name = 'Sylvia Plath';
     $plath->birth_date = '1932-10-27';
     $plath->save();
-    
+
     $angelou = new Author;
     $angelou->name = 'Maya Angelou';
     $angelou->birth_date = '1928-04-04';
     $angelou->save();
 
-    # Books     
+    # Books
     $gatsby = new Book;
     $gatsby->title = 'The Great Gatsby';
     $gatsby->published = 1925;
     $gatsby->cover = 'http://img2.imagesbn.com/p/9780743273565_p0_v4_s114x166.JPG';
     $gatsby->purchase_link = 'http://www.barnesandnoble.com/w/the-great-gatsby-francis-scott-fitzgerald/1116668135?ean=9780743273565';
-    
-    # Associate has to be called *before* the book is created (save()) 
+
+    # Associate has to be called *before* the book is created (save())
     $gatsby->author()->associate($fitzgerald); # Equivalent of $gatsby->author_id = $fitzgerald->id
     $gatsby->save();
-    
+
     $belljar = new Book;
     $belljar->title = 'The Bell Jar';
     $belljar->published = 1963;
@@ -490,7 +480,7 @@ Route::get('/seed-books-and-authors', function() {
     $belljar->purchase_link = 'http://www.barnesandnoble.com/w/bell-jar-sylvia-plath/1100550703?ean=9780061148514';
     $belljar->author()->associate($plath);
     $belljar->save();
-        
+
     $cagedbird = new Book;
     $cagedbird->title = 'I Know Why the Caged Bird Sings';
     $cagedbird->published = 1969;
@@ -501,7 +491,7 @@ Route::get('/seed-books-and-authors', function() {
 
     return 'Done';
 
-  
+
 });
 
 
@@ -509,23 +499,23 @@ Route::get('/seed-books-and-authors', function() {
 Route::get('/seed-books-and-authors-with-tags', function() {
 
     $clean = new Clean();
-    
+
     # Authors
     $fitzgerald = new Author;
     $fitzgerald->name = 'F. Scott Fitzgerald';
     $fitzgerald->birth_date = '1896-09-24';
     $fitzgerald->save();
-    
+
     $plath = new Author;
     $plath->name = 'Sylvia Plath';
     $plath->birth_date = '1932-10-27';
     $plath->save();
-    
+
     $angelou = new Author;
     $angelou->name = 'Maya Angelou';
     $angelou->birth_date = '1928-04-04';
     $angelou->save();
-    
+
     # Tags (Created using the Model Create shortcut method)
     # Note: Tags model must have `protected $fillable = array('name');` in order for this to work
     $novel         = Tag::create(array('name' => 'novel'));
@@ -535,25 +525,25 @@ Route::get('/seed-books-and-authors-with-tags', function() {
     $wealth        = Tag::create(array('name' => 'wealth'));
     $women         = Tag::create(array('name' => 'women'));
     $autobiography = Tag::create(array('name' => 'autobiography'));
-    
-    # Books     
+
+    # Books
     $gatsby = new Book;
     $gatsby->title = 'The Great Gatsby';
     $gatsby->published = 1925;
     $gatsby->cover = 'http://img2.imagesbn.com/p/9780743273565_p0_v4_s114x166.JPG';
     $gatsby->purchase_link = 'http://www.barnesandnoble.com/w/the-great-gatsby-francis-scott-fitzgerald/1116668135?ean=9780743273565';
-    
-    # Associate has to be called *before* the book is created (save()) 
+
+    # Associate has to be called *before* the book is created (save())
     $gatsby->author()->associate($fitzgerald); # Equivalent of $gatsby->author_id = $fitzgerald->id
     $gatsby->save();
-    
-    # Attach has to be called *after* the book is created (save()), 
+
+    # Attach has to be called *after* the book is created (save()),
     # since resulting `book_id` is needed in the book_tag pivot table
-    $gatsby->tags()->attach($novel); 
-    $gatsby->tags()->attach($fiction); 
-    $gatsby->tags()->attach($classic); 
-    $gatsby->tags()->attach($wealth); 
-    
+    $gatsby->tags()->attach($novel);
+    $gatsby->tags()->attach($fiction);
+    $gatsby->tags()->attach($classic);
+    $gatsby->tags()->attach($wealth);
+
     $belljar = new Book;
     $belljar->title = 'The Bell Jar';
     $belljar->published = 1963;
@@ -561,12 +551,12 @@ Route::get('/seed-books-and-authors-with-tags', function() {
     $belljar->purchase_link = 'http://www.barnesandnoble.com/w/bell-jar-sylvia-plath/1100550703?ean=9780061148514';
     $belljar->author()->associate($plath);
     $belljar->save();
-    
-    $belljar->tags()->attach($novel);   
-    $belljar->tags()->attach($fiction); 
-    $belljar->tags()->attach($classic); 
-    $belljar->tags()->attach($women); 
-    
+
+    $belljar->tags()->attach($novel);
+    $belljar->tags()->attach($fiction);
+    $belljar->tags()->attach($classic);
+    $belljar->tags()->attach($women);
+
     $cagedbird = new Book;
     $cagedbird->title = 'I Know Why the Caged Bird Sings';
     $cagedbird->published = 1969;
@@ -574,11 +564,11 @@ Route::get('/seed-books-and-authors-with-tags', function() {
     $cagedbird->purchase_link = 'http://www.barnesandnoble.com/w/i-know-why-the-caged-bird-sings-maya-angelou/1100392955?ean=9780345514400';
     $cagedbird->author()->associate($angelou);
     $cagedbird->save();
-    $cagedbird->tags()->attach($autobiography); 
-    $cagedbird->tags()->attach($nonfiction); 
-    $cagedbird->tags()->attach($classic); 
+    $cagedbird->tags()->attach($autobiography);
+    $cagedbird->tags()->attach($nonfiction);
+    $cagedbird->tags()->attach($classic);
     $cagedbird->tags()->attach($women);
-    
+
     return 'Done';
 
 });
@@ -590,7 +580,7 @@ Route::get('/seed-books-and-authors-with-tags', function() {
 Print all available routes
 */
 Route::get('/routes', function() {
-    
+
     $routeCollection = Route::getRoutes();
 
     foreach($routeCollection as $value) {
