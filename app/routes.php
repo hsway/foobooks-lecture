@@ -73,13 +73,15 @@ Route::post('/signup',
             }
             # Fail
             catch (Exception $e) {
-                return Redirect::to('/signup')->with('flash_message', 'Sign up failed; please try again.')->withInput();
+                return Redirect::to('/signup')
+                    ->with('flash_message', 'Sign up failed; please try again.')->withInput();
             }
 
             # Log the user in
             Auth::login($user);
 
-            return Redirect::to('/list')->with('flash_message', 'Welcome to Foobooks!');
+            return Redirect::to('/list')
+                ->with('flash_message', 'Welcome to Foobooks!');
 
         }
     )
@@ -100,16 +102,18 @@ Route::get('/login',
 # User: Log in
 Route::post('/login',
     array(
-        'before' => 'csrf',
+        'before' => ['csrf','guest'],
         function() {
 
             $credentials = Input::only('email', 'password');
 
             if (Auth::attempt($credentials, $remember = true)) {
-                return Redirect::intended('/')->with('flash_message', 'Welcome Back!');
+                return Redirect::intended('/')
+                    ->with('flash_message', 'Welcome Back!');
             }
             else {
-                return Redirect::to('/login')->with('flash_message', 'Log in failed; please try again.');
+                return Redirect::to('/login')
+                    ->with('flash_message', 'Log in failed; please try again.');
             }
 
             return Redirect::to('login');
@@ -135,11 +139,25 @@ Route::get('/list/{format?}', function($format = 'html') {
 
     $query = Input::get('query');
 
+    # If there is a query, search the library with that query
     if($query) {
-        $books = Book::where('author','LIKE', "%$query%")->orWhere('title','LIKE',"%$query%")->get();
+
+        # Eager load tags and author
+        $books = Book::with('tags','author')
+        ->whereHas('author', function($q) use($query) {
+            $q->where('name', 'LIKE', "%$query%");
+        })
+        ->orWhereHas('tags', function($q) use($query) {
+            $q->where('name', 'LIKE', "%$query%");
+        })
+        ->orWhere('title', 'LIKE', "%$query%")
+        ->orWhere('published', 'LIKE', "%$query%")
+        ->get();
+
     }
+    # Otherwise, just fetch all books
     else {
-        $books = Book::all();
+        $books = Book::with('tags','authors');
     }
 
     if($format == 'json') {
@@ -169,27 +187,29 @@ Route::get('/add', function() {
 
 });
 
-// Process form for a new book
-Route::post('/add', array('before'=>'csrf',
 
+// Process form for a new book
+Route::post('/add',
+    array('before'=>'csrf',
     function() {
 
-    var_dump($_POST);
+        var_dump($_POST);
 
-    $book = new Book();
-    $book->title = $_POST['title'];
-    //$book->title = Input::get('title');
+        $book = new Book();
+        $book->title = $_POST['title'];
+        //$book->title = Input::get('title');
 
-    $book->save();
+        $book->save();
 
-    return Redirect::to('/list');
+        return Redirect::to('/list');
 
-
-}));
+    }
+    )
+);
 
 
 // Display the form to edit a book
-Route::get('/edit/{id?}', function($id = null) {
+Route::get('/edit/{id?}', array('before'=>'auth',function($id = null) {
 
     try {
         $book = Book::findOrFail($id);
@@ -201,7 +221,7 @@ Route::get('/edit/{id?}', function($id = null) {
     return View::make('edit')
         ->with('book', $book);
 
-});
+}));
 
 
 // Process form for a edit book

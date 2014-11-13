@@ -5,6 +5,7 @@
 @stop
 
 @section('content')
+
 	<h1>Books</h1>
 
 	<div>
@@ -18,24 +19,30 @@
 		<h2>You searched for {{{ $query }}}</h2>
 	@endif
 
-	@foreach($books as $book)
-		<section class='book'>
+	@if(sizeof($books) == 0)
+		No results
+	@else
 
-			<h2>{{ $book['title'] }}</h2>
+		@foreach($books as $book)
+			<section class='book'>
 
-			<p>
-				<a href='/edit/{{$book['id']}}'>Edit</a>
-			</p>
+				<h2>{{ $book['title'] }}</h2>
 
-			<p>
-				{{ $book['author']['name'] }} ({{$book['published']}})
-			</p>
+				<p>
+					<a href='/edit/{{$book['id']}}'>Edit</a>
+				</p>
 
-			<img src='{{ $book['cover'] }}'>
-			<br>
-			<a href='{{ $book['purchase_link'] }}'>Purchase...</a>
-		</section>
-	@endforeach
+				<p>
+					{{ $book['author']['name'] }} ({{$book['published']}})
+				</p>
+
+				<img src='{{ $book['cover'] }}'>
+				<br>
+				<a href='{{ $book['purchase_link'] }}'>Purchase...</a>
+			</section>
+		@endforeach
+
+	@endif
 
 @stop
 
