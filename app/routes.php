@@ -158,6 +158,8 @@ Route::get('/list/{format?}', function($format = 'html') {
 });
 
 
+
+
 // Display the form for a new book
 Route::get('/add', function() {
 
@@ -185,14 +187,36 @@ Route::post('/add', array('before'=>'csrf',
 
 
 // Display the form to edit a book
-Route::get('/edit/{title}', function() {
+Route::get('/edit/{id?}', function($id = null) {
 
+    try {
+        $book = Book::findOrFail($id);
+    }
+    catch(exception $e) {
+        return Redirect::to('/list')->with('flash_message', 'Book not found');
+    }
+
+    return View::make('edit')
+        ->with('book', $book);
 
 });
 
-// Process form for a edit book
-Route::post('/edit/', function() {
 
+// Process form for a edit book
+Route::post('/edit', function() {
+
+    try {
+        $book = Book::findOrFail(Input::get('id'));
+    }
+    catch(exception $e) {
+        return Redirect::to('/list')->with('flash_message', 'Book not found');
+    }
+
+    # http://laravel.com/docs/4.2/eloquent#mass-assignment
+    $book->fill(Input::all());
+    $book->save();
+
+    return Redirect::to('/list')->with('flash_message','Your changes have been saved.');
 
 });
 

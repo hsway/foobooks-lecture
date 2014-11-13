@@ -1,6 +1,8 @@
 <?php
 
-class Book extends Eloquent { 
+class Book extends Eloquent {
+
+	protected $guarded = array('id');
 
 	public function author() {
         # Book belongs to Author
@@ -9,7 +11,7 @@ class Book extends Eloquent {
     }
 
     public function tags() {
-        # Books belong to many Tags     
+        # Books belong to many Tags
         return $this->belongsToMany('Tag');
     }
 

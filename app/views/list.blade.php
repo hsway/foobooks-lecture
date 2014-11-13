@@ -9,7 +9,7 @@
 
 	<div>
 		View as:
-		<a href='/list/json' target='_blank'>JSON</a> | 
+		<a href='/list/json' target='_blank'>JSON</a> |
 		<a href='/list/pdf' target='_blank'>PDF</a>
 	</div>
 
@@ -17,10 +17,24 @@
 
 	@foreach($books as $book)
 		<section class='book'>
-			<h2>{{ $book['title'] }}</h2>
-			{{ $book['author'] }} ({{$book['published']}})
 
-			
+			<h2>{{ $book['title'] }}</h2>
+
+			<p>
+				<small>
+				Created: {{ $book['created_at' ]}}<br>
+				Updated: {{ $book['updated_at' ]}}
+				</small>
+			</p>
+
+			<p>
+				<a href='/edit/{{$book['id']}}'>Edit</a>
+			</p>
+
+			<p>
+				{{ $book['author']['name'] }} ({{$book['published']}})
+			</p>
+
 			<img src='{{ $book['cover'] }}'>
 			<br>
 			<a href='{{ $book['purchase_link'] }}'>Purchase...</a>

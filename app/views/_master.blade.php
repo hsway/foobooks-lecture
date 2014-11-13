@@ -10,9 +10,13 @@
 
 	@yield('head')
 
-	
+
 </head>
 <body>
+
+	@if(Session::get('flash_message'))
+		<div class='flash-message'>{{ Session::get('flash_message') }}</div>
+	@endif
 
 	<a href='/'><img class='logo' src='/images/laravel-foobooks-logo@2x.png' alt='Foobooks logo'></a>
 
@@ -24,11 +28,11 @@
 			<li><a href='/add'>+ Add Book</a></li>
 		</ul>
 	</nav>
-	
+
 	@yield('content')
 
 	@yield('/body')
-	
+
 </body>
 </html>
 
