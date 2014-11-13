@@ -13,19 +13,15 @@
 		<a href='/list/pdf' target='_blank'>PDF</a>
 	</div>
 
-	<h2>You searched for {{{ $query }}}</h2>
+
+	@if($query)
+		<h2>You searched for {{{ $query }}}</h2>
+	@endif
 
 	@foreach($books as $book)
 		<section class='book'>
 
 			<h2>{{ $book['title'] }}</h2>
-
-			<p>
-				<small>
-				Created: {{ $book['created_at' ]}}<br>
-				Updated: {{ $book['updated_at' ]}}
-				</small>
-			</p>
 
 			<p>
 				<a href='/edit/{{$book['id']}}'>Edit</a>
