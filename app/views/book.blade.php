@@ -10,8 +10,8 @@
 
 	<div>
 		View as:
-		<a href='/list/json' target='_blank'>JSON</a> |
-		<a href='/list/pdf' target='_blank'>PDF</a>
+		<a href='/book/?format=json' target='_blank'>JSON</a> |
+		<a href='/book/?format=pdf' target='_blank'>PDF</a>
 	</div>
 
 
@@ -29,7 +29,7 @@
 				<h2>{{ $book['title'] }}</h2>
 
 				<p>
-					<a href='/edit/{{$book['id']}}'>Edit</a>
+					<a href='/book/edit/{{$book['id']}}'>Edit</a>
 				</p>
 
 				<p>

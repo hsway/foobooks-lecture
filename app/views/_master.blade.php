@@ -22,8 +22,8 @@
 		<ul>
 		@if(Auth::check())
 			<li><a href='/logout'>Log out {{ Auth::user()->email; }}</a></li>
-			<li><a href='/list'>View all Books</a></li>
-			<li><a href='/add'>+ Add Book</a></li>
+			<li><a href='/book'>View all Books</a></li>
+			<li><a href='/book/create'>+ Add Book</a></li>
 		@else
 			<li><a href='/signup'>Sign up</a> or <a href='/login'>Log in</a></li>
 		@endif

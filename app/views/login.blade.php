@@ -1,7 +1,7 @@
 @extends('_master')
 
 @section('title')
-	Books
+	Log in
 @stop
 
 @section('content')
