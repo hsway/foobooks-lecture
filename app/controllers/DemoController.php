@@ -223,4 +223,20 @@ class DemoController extends BaseController {
 		}
 
 	}
+
+
+	public function getSimpleAjax() {
+
+		 return View::make('ajax-example');
+	}
+
+
+	public function postSimpleAjax() {
+
+		$data = var_dump($_POST);
+
+   		$data .= '<br>Your name reversed is '.strrev($_POST['name']);
+
+    	return $data;
+	}
 }

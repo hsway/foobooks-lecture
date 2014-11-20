@@ -1,5 +1,20 @@
 <?php
 
+
+Route::get('/test-a', function() {
+
+    //Session::set('foo','bar');
+    return Redirect::to('/test-b')->with('foo','bar');
+
+});
+
+Route::get('/test-b', function() {
+
+	echo Paste\Pre::render(Session::all(),'');
+    echo Session::get('foo');
+
+});
+
 /**
 * Index
 */
@@ -27,8 +42,12 @@ Route::get('/book/edit/{id}', 'BookController@getEdit');
 Route::post('/book/edit', 'BookController@postEdit');
 Route::get('/book/create', 'BookController@getCreate');
 Route::post('/book/create', 'BookController@postCreate');
+Route::post('/book/delete', 'BookController@postDelete');
+
+## Ajax examples
 Route::get('/book/search', 'BookController@getSearch');
 Route::post('/book/search', 'BookController@postSearch');
+
 
 
 /**
@@ -77,30 +96,10 @@ Route::get('/demo/query-relationships-tags', 'DemoController@queryRelationshipst
 Route::get('/demo/query-eager-loading-authors', 'DemoController@queryEagerLoadingAuthors');
 Route::get('/demo/query-eager-loading-tags-and-authors', 'DemoController@queryEagerLoadingTagsAndAuthors');
 
+Route::get('/demo/simple-ajax', 'DemoController@getSimpleAjax');
+Route::post('/demo/simple-ajax', ['before' => 'csrf', 'uses' => 'DemoController@postSimpleAjax'] );
 
 
-
-
-
-
-
-# Show the form
-Route::get('/ajax-example', function() {
-
-   return View::make('ajax-example');
-
-});
-
-# Process the form - this is triggered by Ajax
-Route::post('/ajax-example', array('before'=>'csrf', function() {
-
-    $data = var_dump($_POST);
-
-    $data .= '<br>Your name reversed is '.strrev($_POST['name']);
-
-    return $data;
-
-}));
 
 
 

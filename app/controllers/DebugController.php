@@ -2,6 +2,16 @@
 
 class DebugController extends BaseController {
 
+	/**
+	* Magic method that gets triggered if the user enters a URL for a method that does not exist
+	*
+	* @return String
+	*/
+	public function missingMethod($parameters = array()) {
+
+		return 'Method "'.$parameters[0].'" not found';
+
+	}
 
 	/**
 	* http://localhost/debug/index
@@ -149,5 +159,55 @@ class DebugController extends BaseController {
 
 	}
 
+	/**
+	* Outputs Session and Cookie data in various forms.
+	* Used to understand how Sessions and Cookies are working
+	*/
+	public function getSessionsAndCookies() {
+		 # Log in check
+	    if(Auth::check())
+	        echo "You are logged in: ".Auth::user();
+	    else
+	        echo "You are not logged in.";
+	    echo "<br><br>";
+
+	    # Cookies
+	    echo "<h1>Your Raw, encrypted Cookies</h1>";
+	    echo Paste\Pre::render($_COOKIE,'');
+
+	    # Decrypted cookies
+	    echo "<h1>Your Decrypted Cookies</h1>";
+	    echo Paste\Pre::render(Cookie::get(),'');
+	    echo "<br><br>";
+
+	    # All Session files
+	    echo "<h1>All Session Files</h1>";
+	    $files = File::files(app_path().'/storage/sessions');
+
+	    foreach($files as $file) {
+	        if(strstr($file,Cookie::get('laravel_session'))) {
+	            echo "<div style='background-color:yellow'><strong>YOUR SESSION FILE:</strong><br>";
+	        }
+	        else {
+	            echo "<div>";
+	        }
+	        echo "<strong>".$file."</strong>:<br>".File::get($file)."<br>";
+	        echo "</div><br>";
+	    }
+
+	    echo "<br><br>";
+
+	    # Your Session Data
+	    $data = Session::all();
+	    echo "<h1>Your Session Data</h1>";
+	    echo Paste\Pre::render($data,'Session data');
+	    echo "<br><br>";
+
+	    # Token
+	    echo "<h1>Your CSRF Token</h1>";
+	    echo Form::token();
+	    echo "<script>document.querySelector('[name=_token]').type='text'</script>";
+	    echo "<br><br>";
+	}
 
 }

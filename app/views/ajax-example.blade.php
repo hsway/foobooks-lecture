@@ -8,7 +8,7 @@
 
 	<h1>What is your name?</h1>
 
-	{{ Form::open(array('url' => 'ajax-example')); }}
+	{{ Form::open(); }}
 
 		{{ Form::text('name'); }}
 
@@ -26,17 +26,17 @@
 
 	<script>
 	// First, set up the options for the ajax submission
-	var options = { 
+	var options = {
 	    type: 'post',
-	    url: '/ajax-example',
-	    success: function(response) { 
+	    url: '/demo/simple-ajax',
+	    success: function(response) {
 	        // Load the results recieved from process.php into the results div
-	        $('#results').html(response);       
-	    } 
-	}; 
+	        $('#results').html(response);
+	    }
+	};
 
-	// Then attach the ajax form plugin to this form so that when it's submitted, 
-	// it will be submitted via ajax    
+	// Then attach the ajax form plugin to this form so that when it's submitted,
+	// it will be submitted via ajax
 	$('form').ajaxForm(options);
 
 	</script>
