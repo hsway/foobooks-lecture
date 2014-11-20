@@ -4,18 +4,6 @@
 Note there are no before=>csrf filters in here - it's being handled in the BaseController
 */
 
-Route::get('/test-a', function() {
-
-	Session::flash('foo','bar');
-	return Redirect::to('/test-b');
-
-});
-
-Route::get('/test-b', function() {
-
-	return Session::get('foo');
-
-});
 
 /**
 * Index

@@ -45,6 +45,10 @@ class Book extends Eloquent {
             ->orWhere('published', 'LIKE', "%$query%")
             ->get();
 
+            # Note on what `use` means above:
+            # Closures may inherit variables from the parent scope.
+            # Any such variables must be passed to the `use` language construct.
+
         }
         # Otherwise, just fetch all books
         else {

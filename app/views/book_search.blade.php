@@ -14,6 +14,7 @@
 	{{ Form::token() }}
 
 	<button id='search-json'>Search and get JSON back</button><br><br>
+
 	<button id='search-html'>Search and get HTML back</button>
 
 	<div id='results'></div>
