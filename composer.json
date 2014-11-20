@@ -8,7 +8,8 @@
 		"paste/pre": "dev-master",
 		"xi/randomstring": "dev-master",
 		"badcow/lorem-ipsum": "dev-master",
-		"barryvdh/laravel-debugbar": "1.7.*@dev"
+		"barryvdh/laravel-debugbar": "1.7.*@dev",
+		"laracasts/utilities": "~1.0"
 	},
 	"autoload": {
 		"classmap": [

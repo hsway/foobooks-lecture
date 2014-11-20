@@ -7,6 +7,9 @@ class UserController extends BaseController {
 	*/
 	public function __construct() {
 
+		# Make sure BaseController construct gets called
+		parent::__construct();
+
         $this->beforeFilter('guest',
         	array(
         		'only' => array('getLogin','getSignup')
@@ -87,6 +90,7 @@ class UserController extends BaseController {
 
 		$credentials = Input::only('email', 'password');
 
+		# Note we don't have to hash the password before attempting to auth - Auth::attempt will take care of that for us
 		if (Auth::attempt($credentials, $remember = false)) {
 			return Redirect::intended('/')->with('flash_message', 'Welcome Back!');
 		}

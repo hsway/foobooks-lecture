@@ -3,7 +3,17 @@
 class DebugController extends BaseController {
 
 	/**
-	* Magic method that gets triggered if the user enters a URL for a method that does not exist
+	*
+	*/
+	public function __construct() {
+
+		# Make sure BaseController construct gets called
+		parent::__construct();
+
+	}
+
+	/**
+	* Special method that gets triggered if the user enters a URL for a method that does not exist
 	*
 	* @return String
 	*/
@@ -102,11 +112,14 @@ class DebugController extends BaseController {
 	*/
 	public function getBooksJson() {
 
+		# Old school way of getting books using the Library class and books.json
+		# We've since updated this method with the Book model class and `books` table
+
 		# Instantiating an object of the Library class
 		$library = new Library(app_path().'/database/books.json');
 
 		# Get the books
-		$books = $library->get_books();
+		$books = $library->getBooks();
 
 		# Debug
 		return Pre::render($books, 'Books');
@@ -115,11 +128,11 @@ class DebugController extends BaseController {
 
 	/**
 	* Old seeder - have since moved to proper seeding
-	* http://localhost/debug/books-json
+	* http://localhost/debug/seed-books
 	*
 	* @return String
 	*/
-	public function seedBooks() {
+	public function getSeedBooks() {
 
 		return 'This seed will no longer work because the books table is no longer embedded with the author.';
 
@@ -146,7 +159,7 @@ class DebugController extends BaseController {
 	*
 	* @return String
 	*/
-	public function mysqlTest() {
+	public function getMysqlTest() {
 
 	    # Print environment
 	    echo 'Environment: '.App::environment().'<br>';

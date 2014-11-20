@@ -2,7 +2,17 @@
 
 class DemoController extends BaseController {
 
+	public function __construct() {
 
+		# Make sure BaseController construct gets called
+		parent::__construct();
+
+	}
+
+	/**
+	* CSRF Example
+	* @return View
+	*/
 	public function csrf() {
 
 		return View::make('demo_csrf');
