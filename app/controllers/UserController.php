@@ -100,8 +100,6 @@ class UserController extends BaseController {
 				->withInput();
 		}
 
-		return Redirect::to('login');
-
 	}
 
 
