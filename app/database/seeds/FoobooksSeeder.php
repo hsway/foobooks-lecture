@@ -82,8 +82,10 @@ class FoobooksSeeder extends Seeder {
 		$cagedbird->tags()->attach($women);
 
 		$user = new User;
-		$user->email    = 'sam@gmail.com';
-		$user->password = Hash::make('sam');
+		$user->email      = 'sam@gmail.com';
+		$user->password   = Hash::make('sam1234');
+		$user->first_name = 'Sam';
+		$user->last_name  = 'Seaborn';
 		$user->save();
 
 

@@ -56,6 +56,7 @@ Route::resource('tag', 'TagController');
 * Demos
 * (Explicit Routing)
 */
+Route::get('/demo/new-user-welcome-email', 'DemoController@newUserWelcomeEmail');
 Route::get('/demo/csrf-example', 'DemoController@csrf');
 Route::get('/demo/collections', 'DemoController@collections');
 Route::get('/demo/js-vars', 'DemoController@jsVars');
