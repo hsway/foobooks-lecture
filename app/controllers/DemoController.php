@@ -10,6 +10,15 @@ class DemoController extends BaseController {
 	}
 
 
+	public function pingLogFile() {
+
+		Log::info('Pinged log file');
+
+		return 'Pinged log file';
+
+	}
+
+
 	/**
 	* Quick way to demonstrate sending a welcome email
 	*/

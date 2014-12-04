@@ -15,6 +15,25 @@ class BookController extends \BaseController {
 
 	}
 
+	/**
+	*
+	*/
+	public function getDigest() {
+
+		$books = Book::getBooksAddedInTheLast24Hours();
+
+		$users = User::all();
+
+		$recipients = Book::sendDigests($users,$books);
+
+		$results = 'Book digest sent to: '.$recipients;
+
+		Log::info($results);
+
+		return $results;
+
+	}
+
 
 	/**
 	* Process the searchform

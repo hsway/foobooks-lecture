@@ -60,4 +60,63 @@ class Book extends Eloquent {
     }
 
 
+
+    /**
+    * Searches and returns any books added in the last 24 hours
+    *
+    * @return Collection
+    */
+    public static function getBooksAddedInTheLast24Hours() {
+
+        # Timestamp of 24 hours ago
+        $past_24_hours = strtotime('-1 day');
+
+        # Convert to MySQL timestamp
+        $past_24_hours = date('Y-m-d H:i:s', $past_24_hours);
+
+        $books = Book::where('created_at','>',$past_24_hours)->get();
+
+        return $books;
+
+    }
+
+
+    /**
+    *
+    *
+    * @return String
+    */
+    public static function sendDigests($users,$books) {
+
+        $recipients = '';
+
+        $data['books'] = $books;
+
+        foreach($users as $user) {
+
+            $data['user'] = $user;
+
+            /*
+            Mail::send('emails.digest', $data, function($message) {
+
+                $recipient_email = $user->email;
+                $recipient_name  = $user->first_name.' '.$user->last_name;
+                $subject  = 'Foobooks Digest';
+
+                $message->to($recipient_email, $recipient_name)->subject($subject);
+
+            });
+            */
+
+            $recipients .= $user->email.', ';
+
+        }
+
+        $recipients = rtrim($recipients, ',');
+
+        return $recipients;
+
+    }
+
+
 }

@@ -5,6 +5,15 @@ Note there are no before=>csrf filters in here - it's being handled in the BaseC
 */
 
 
+Route::get('/ping', function() {
+
+	Log::info('Pinged log file');
+
+	return 'Pinged log file';
+
+});
+
+
 /**
 * Index
 */
@@ -27,11 +36,16 @@ Route::get('/logout', 'UserController@getLogout' );
 * (Explicit Routing)
 */
 Route::get('/book', 'BookController@getIndex');
+
 Route::get('/book/edit/{id}', 'BookController@getEdit');
 Route::post('/book/edit', 'BookController@postEdit');
+
 Route::get('/book/create', 'BookController@getCreate');
 Route::post('/book/create', 'BookController@postCreate');
+
 Route::post('/book/delete', 'BookController@postDelete');
+
+Route::get('/book/digest', 'BookController@getDigest');
 
 ## Ajax examples
 Route::get('/book/search', 'BookController@getSearch');
@@ -56,6 +70,7 @@ Route::resource('tag', 'TagController');
 * Demos
 * (Explicit Routing)
 */
+Route::get('/demo/ping-log-file', 'DemoController@pingLogFile');
 Route::get('/demo/new-user-welcome-email', 'DemoController@newUserWelcomeEmail');
 Route::get('/demo/csrf-example', 'DemoController@csrf');
 Route::get('/demo/collections', 'DemoController@collections');
