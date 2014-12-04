@@ -10,6 +10,11 @@ class DemoController extends BaseController {
 	}
 
 
+	/**
+	* Used for testing cron scheduling
+	*
+	* @return String
+	*/
 	public function pingLogFile() {
 
 		Log::info('Pinged log file');

@@ -11,12 +11,13 @@ class BookController extends \BaseController {
 		# Make sure BaseController construct gets called
 		parent::__construct();
 
-		$this->beforeFilter('auth', array('except' => 'getIndex'));
+		$this->beforeFilter('auth', array('except' => ['getIndex','getDigest']));
 
 	}
 
+
 	/**
-	*
+	* Used as an example for something you might want to set up a cron job for
 	*/
 	public function getDigest() {
 
