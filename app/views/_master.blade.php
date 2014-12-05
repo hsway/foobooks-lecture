@@ -10,25 +10,37 @@
 
 	@yield('head')
 
-	
+
 </head>
 <body>
 
-	<a href='/'><img class='logo' src='/images/laravel-foobooks-logo@2x.png' alt='Foobooks logo'></a>
+	@if(Session::get('flash_message'))
+		<div class='flash-message'>{{ Session::get('flash_message') }}</div>
+	@endif
 
-	<a href='https://github.com/susanBuck/foobooks'>View on Github</a>
+	<a href='/'><img class='logo' src='/images/laravel-foobooks-logo@2x.png' alt='Foobooks logo'></a>
 
 	<nav>
 		<ul>
-			<li><a href='/list'>List All</a></li>
-			<li><a href='/add'>+ Add Book</a></li>
+		@if(Auth::check())
+			<li><a href='/logout'>Log out {{ Auth::user()->email; }}</a></li>
+			<li><a href='/book'>All Books</a></li>
+			<li><a href='/book/search'>Search Books (w/ Ajax)</a></li>
+			<li><a href='/tag'>All Tags</a></li>
+			<li><a href='/book/create'>+ Add Book</a></li>
+			<li><a href='/debug/routes'>Routes</a></li>
+		@else
+			<li><a href='/signup'>Sign up</a> or <a href='/login'>Log in</a></li>
+		@endif
 		</ul>
 	</nav>
-	
+
+	<a href='https://github.com/susanBuck/foobooks'>View on Github</a>
+
 	@yield('content')
 
-	@yield('body')
-	
+	@yield('/body')
+
 </body>
 </html>
 
