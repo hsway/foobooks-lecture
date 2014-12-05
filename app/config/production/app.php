@@ -13,7 +13,6 @@ return array(
 	|
 	*/
 
-	'debug' => true,
-	'debug_bar' => false,
+	'debug' => false,
 
 );

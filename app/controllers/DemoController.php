@@ -9,6 +9,44 @@ class DemoController extends BaseController {
 
 	}
 
+
+	/**
+	* Used for testing cron scheduling
+	*
+	* @return String
+	*/
+	public function pingLogFile() {
+
+		Log::info('Pinged log file');
+
+		return 'Pinged log file';
+
+	}
+
+
+	/**
+	* Quick way to demonstrate sending a welcome email
+	*/
+	public function newUserWelcomeEmail() {
+
+		# Add a new user
+		$user = new User;
+		$user->email      = 'mail'.rand(10,100).'@susanbuck.net';
+		$user->first_name = 'Sam';
+		$user->last_name  = 'Seaborn';
+		$user->password   = Hash::make('foobar1234');
+		$user->save();
+
+		# Log in
+		Auth::login($user);
+
+		$user->sendWelcomeEmail();
+
+		return $user.'<br> Email Sent';
+
+	}
+
+
 	/**
 	* CSRF Example
 	* @return View

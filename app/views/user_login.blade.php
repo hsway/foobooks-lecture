@@ -13,7 +13,7 @@
     {{ Form::label('email') }}
     {{ Form::text('email','sam@gmail.com') }}
 
-    {{ Form::label('password') }} (sam)
+    {{ Form::label('password') }} (sam1234)
     {{ Form::password('password') }}
 
     {{ Form::submit('Submit') }}
