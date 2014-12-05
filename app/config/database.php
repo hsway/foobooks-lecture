@@ -28,6 +28,17 @@ return array(
 
 	'default' => 'mysql',
 
+		'connections' => array(
+
+			'mysql' => array(
+				'driver'    => 'mysql',
+				'charset'   => 'utf8',
+				'collation' => 'utf8_unicode_ci',
+				'prefix'    => '',
+			),
+
+		),
+
 	/*
 	|--------------------------------------------------------------------------
 	| Migration Repository Table
